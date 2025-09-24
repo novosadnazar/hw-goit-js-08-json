@@ -44,3 +44,32 @@ listRef.addEventListener("click", (event) => {
     render();
   }
 });
+
+
+
+const userNameInput = document.querySelector("#username");
+const passwordInput = document.querySelector("#password");
+const saveBtn = document.querySelector("#saveBtn");
+const addBookmarkBtn = document.querySelector("#addBookmarkBtn");
+
+saveBtn.addEventListener("click", () => {
+  localStorage.setItem("username", userNameInput.value);
+  localStorage.setItem("password", passwordInput.value);
+});
+
+addBookmarkBtn.addEventListener("click", () => {
+    localStorage.setItem("bookmarkInput", addBookmarkBtn.value);
+    localStorage.setItem("bookmarkInput", bookmarkInput.value);
+})
+
+window.addEventListener("DOMContentLoaded", () => {
+  const savedUsername = localStorage.getItem("username");
+  const savedPassword = localStorage.getItem("password");
+  const savedUrl = localStorage.getItem("addBookmarkBtn");
+
+
+  if (savedUsername) userNameInput.value = savedUsername;
+  if (savedPassword) passwordInput.value = savedPassword;
+  if (savedUrl) addBookmarkBtn.value = savedUrl;
+});
+
