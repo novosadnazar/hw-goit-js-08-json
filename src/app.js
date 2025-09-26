@@ -1,30 +1,36 @@
-const input = document.querySelector("#bookmarkInput");
+const inputEl = document.querySelector("#bookmarkInput");
 const addBtn = document.querySelector("#addBookmarkBtn");
 const listRef = document.querySelector("#bookmarkList");
 
 let urlList = [];
+
 
 const render = function () {
   listRef.innerHTML = urlList
     .map(
       (url, index) =>
         `<li>
-      <a target="_blank" href="${url}">${url}</a>
-      <button type="button" data-index="${index}" class="delete">Del</button>
-      <button type="button" data-index="${index}" class="edit">Edit</button>
-    </li>`
+          <a target="_blank" href="${url}">${url}</a>
+          <button type="button" data-index="${index}" class="delete">Del</button>
+          <button type="button" data-index="${index}" class="edit">Edit</button>
+        </li>`
     )
     .join("");
 };
+  
 
 addBtn.addEventListener("click", function () {
-  const url = input.value.trim();
+  const url = inputEl.value.trim();
   if (url) {
     urlList.push(url);
-    input.value = "";
+    inputEl.value = "";
     render();
+
+  
+    localStorage.setItem("urlList", JSON.stringify(urlList));
   }
 });
+
 
 listRef.addEventListener("click", (event) => {
   const index = event.target.dataset.index;
@@ -36,40 +42,38 @@ listRef.addEventListener("click", (event) => {
     if (newUrl) {
       urlList[index] = newUrl;
       render();
+      localStorage.setItem("urlList", JSON.stringify(urlList));
     }
   }
 
   if (event.target.classList.contains("delete")) {
     urlList.splice(index, 1);
     render();
+    localStorage.setItem("urlList", JSON.stringify(urlList));
   }
 });
-
 
 
 const userNameInput = document.querySelector("#username");
 const passwordInput = document.querySelector("#password");
 const saveBtn = document.querySelector("#saveBtn");
-const addBookmarkBtn = document.querySelector("#addBookmarkBtn");
 
 saveBtn.addEventListener("click", () => {
   localStorage.setItem("username", userNameInput.value);
   localStorage.setItem("password", passwordInput.value);
 });
 
-addBookmarkBtn.addEventListener("click", () => {
-    localStorage.setItem("bookmarkInput", addBookmarkBtn.value);
-    localStorage.setItem("bookmarkInput", bookmarkInput.value);
-})
 
 window.addEventListener("DOMContentLoaded", () => {
   const savedUsername = localStorage.getItem("username");
   const savedPassword = localStorage.getItem("password");
-  const savedUrl = localStorage.getItem("addBookmarkBtn");
-
+  const savedUrls = localStorage.getItem("urlList");
 
   if (savedUsername) userNameInput.value = savedUsername;
   if (savedPassword) passwordInput.value = savedPassword;
-  if (savedUrl) addBookmarkBtn.value = savedUrl;
-});
 
+  if (savedUrls) {
+    urlList = JSON.parse(savedUrls);
+    render();
+  }
+});
